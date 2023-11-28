@@ -3,20 +3,28 @@ const jwt = require('jsonwebtoken');
 import { SECRET_KEY } from '../config'
 
 export const authenticateUser = async (req, res, next) => {
-    const token = req.headers["authorization"] || "";
-    console.log(req.headers["authorization"]);
-    try {
-
-        const decoded = jwt.verify(token, SECRET_KEY);;
-        console.log(decoded.email);
-        const user = await User.findOne({ email: decoded.email});
-
-        if (!user) return res.status(404).json({ message: "No user found" });
-
-        req.user = user;
-        req.token = token;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: error.message });
+    const authorization = req.get('authorization')
+    let token = ''
+    if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+        token = authorization.substring(7)
     }
+
+    let decodedToken = {}
+    try {
+        decodedToken = jwt.verify(token, SECRET_KEY)
+    } catch (e) {
+        console.log(e)
+    }
+
+    if (!token || !decodedToken.email) {
+        return res.status(401).json({ message: "token missing or invalid" })
+    }
+
+    const user = await User.findOne({ email: decodedToken.email });
+
+    if (!user) return res.status(404).json({ message: "No user found" });
+
+    req.user = user;
+    req.token = token;
+    next();
 };
