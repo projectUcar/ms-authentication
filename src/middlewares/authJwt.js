@@ -13,7 +13,7 @@ export const authenticateUser = async (req, res, next) => {
     try {
         decodedToken = jwt.verify(token, SECRET_KEY)
     } catch (e) {
-        console.log(e)
+        return res.status(401).json({ error: e })
     }
 
     if (!token || !decodedToken.email) {
