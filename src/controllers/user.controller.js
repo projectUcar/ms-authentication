@@ -10,7 +10,8 @@ export const getUserProfile = async (req, res) => {
         carrer: 1,
         semester: 1,
         phoneNumber: 1,
-        gender: 1
+        gender: 1,
+        photoUrl: 1,
       });
   
       res.json(userProfile);
