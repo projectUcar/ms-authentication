@@ -4,6 +4,8 @@ import pkg from '../package.json'
 import helmet from "helmet";
 
 import authRoutes from './routes/auth.routes'
+import indexRoutes from "./routes/index.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 const app = express()
 
@@ -14,15 +16,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
-    res.json({
-        name: app.get('pkg').name,
-        author: app.get('pkg').author,
-        description: app.get('pkg').description,
-        version: app.get('pkg').version
-    })
-})
+app.set("json spaces", 4);
 
+app.use('/api', indexRoutes)
+app.use("/api/user", userRoutes);
 app.use('/api/auth', authRoutes)
 
 export default app;

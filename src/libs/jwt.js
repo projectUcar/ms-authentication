@@ -12,5 +12,14 @@ const generateToken = (user) => {
   return token;
 };
 
+export const decodeToken = (token) => {
+  try {
+    const payload = jwt.verify(token, SECRET_KEY);
+
+    return payload;
+  } catch (err) {
+    return null;
+  }
+};
 
 export default generateToken;

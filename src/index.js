@@ -1,7 +1,7 @@
 import app from "./app";
+import { PORT } from "./config.js";
 import './database'
 import "./libs/initialSetup.js";
 
-app.listen(4000);
-console.log('Server listening on port', 4000);
-app.set("json spaces", 4);
+app.listen(PORT);
+console.log('Server listening on port', PORT);
