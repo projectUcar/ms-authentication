@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes'
 import indexRoutes from "./routes/index.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import forgotPasswordRoutes from './routes/forgotPassword.routes.js';
+import uploadProfileImage from './routes/uploadProfileImage.routes.js';
 
 const app = express()
 
@@ -23,5 +24,6 @@ app.use('/api', indexRoutes)
 app.use("/api/user", userRoutes);
 app.use('/api/auth', authRoutes)
 app.use('/api/auth', forgotPasswordRoutes)
+app.use('/api/user', uploadProfileImage)
 
 export default app;

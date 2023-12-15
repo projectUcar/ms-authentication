@@ -7,3 +7,6 @@ export const PORT = process.env.PORT || 4000;
 export const SECRET_KEY = process.env.SECRET;
 export const LENGTH_PASSWORD = 8;
 export const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL
+export const PASSWORD_EMAIL = process.env.PASSWORD_EMAIL
+export const CLIENT_ID = process.env.CLIENT_ID
+export const SECRET_ID = process.env.SECRET_ID
