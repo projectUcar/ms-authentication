@@ -29,16 +29,12 @@ var userSchema = new _mongoose["default"].Schema({
     type: String,
     required: true
   },
-  semester: {
-    type: Number,
-    required: true
-  },
   phoneNumber: {
     type: String,
     required: true,
     unique: true
   },
-  photoUrl: {
+  profileImage: {
     type: String
   },
   gender: {
@@ -57,78 +53,54 @@ var userSchema = new _mongoose["default"].Schema({
   timestamps: true,
   versionKey: false
 });
-userSchema.statics.encryptPassword = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(password) {
-    var salt;
+userSchema.statics.comparePassword = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(password, receivedPassword) {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return _bcryptjs["default"].genSalt(10);
+          return _bcryptjs["default"].compare(password, receivedPassword);
         case 2:
-          salt = _context.sent;
-          _context.next = 5;
-          return _bcryptjs["default"].hash(password, salt);
-        case 5:
           return _context.abrupt("return", _context.sent);
-        case 6:
+        case 3:
         case "end":
           return _context.stop();
       }
     }, _callee);
   }));
-  return function (_x) {
+  return function (_x, _x2) {
     return _ref.apply(this, arguments);
-  };
-}();
-userSchema.statics.comparePassword = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(password, receivedPassword) {
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return _bcryptjs["default"].compare(password, receivedPassword);
-        case 2:
-          return _context2.abrupt("return", _context2.sent);
-        case 3:
-        case "end":
-          return _context2.stop();
-      }
-    }, _callee2);
-  }));
-  return function (_x2, _x3) {
-    return _ref2.apply(this, arguments);
   };
 }();
 
 // Middleware de hashing de contraseñas
 userSchema.pre("save", /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(next) {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(next) {
     var user, hash;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) switch (_context3.prev = _context3.next) {
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
         case 0:
           user = this;
           if (user.isModified("password")) {
-            _context3.next = 3;
+            _context2.next = 3;
             break;
           }
-          return _context3.abrupt("return", next());
+          return _context2.abrupt("return", next());
         case 3:
-          _context3.next = 5;
+          _context2.next = 5;
           return _bcryptjs["default"].hash(user.password, 10);
         case 5:
-          hash = _context3.sent;
+          hash = _context2.sent;
           user.password = hash;
           next();
         case 8:
         case "end":
-          return _context3.stop();
+          return _context2.stop();
       }
-    }, _callee3, this);
+    }, _callee2, this);
   }));
-  return function (_x4) {
-    return _ref3.apply(this, arguments);
+  return function (_x3) {
+    return _ref2.apply(this, arguments);
   };
 }());
 var _default = exports["default"] = _mongoose["default"].model('User', userSchema);
