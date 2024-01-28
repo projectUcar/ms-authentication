@@ -19,16 +19,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    semester: {
-        type: Number,
-        required: true
-    },
     phoneNumber: {
         type: String,
         required: true,
         unique: true
     },
-    photoUrl: {
+    profileImage: {
         type: String
     },
     gender: {

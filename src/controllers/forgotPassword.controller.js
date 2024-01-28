@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import User from "../models/User.js"
 import PasswordReset from '../models/PasswordReset.js';
-import { LENGTH_PASSWORD, PASSWORD_EMAIL, FRONTEND_BASE_URL, PORT } from "../config.js"
+import { LENGTH_PASSWORD, EMAIL_UCAR, PASSWORD_EMAIL, FRONTEND_BASE_URL, PORT } from "../config.js"
 
 // TODO Configuración de nodemailer 
 const transporter = nodemailer.createTransport({
@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   port: 587, // Puerto para TLS
   secure: false, // true para uso seguro (TLS), false para otro caso
   auth: {
-    user: 'carpooling.fisi@upb.edu.co',
+    user: EMAIL_UCAR,
     pass: PASSWORD_EMAIL, //
   },
 });
