@@ -19,16 +19,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    semester: {
-        type: Number,
-        required: true
-    },
     phoneNumber: {
         type: String,
         required: true,
         unique: true
     },
-    photoUrl: {
+    profileImage: {
         type: String
     },
     gender: {
@@ -51,12 +47,6 @@ const userSchema = new mongoose.Schema({
         versionKey: false,
     }
 );
-
-
-userSchema.statics.encryptPassword = async (password) => {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
-};
 
 userSchema.statics.comparePassword  = async (password, receivedPassword) => {
     return await bcrypt.compare(password, receivedPassword)

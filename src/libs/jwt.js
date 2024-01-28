@@ -8,7 +8,7 @@ const generateToken = (user) => {
         email: user.email,
         role: user.roles,
       };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
   return token;
 };
 

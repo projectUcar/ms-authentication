@@ -5,7 +5,7 @@ import { LENGTH_PASSWORD } from '../config.js';
 
 export const singup = async (req, res) => {
     try {
-        const { firstName, lastName, email, carrer, semester, phoneNumber, gender, password, confirmPassword, roles } = req.body;
+        const { firstName, lastName, email, carrer, phoneNumber, gender, password, confirmPassword, roles } = req.body;
         
         if (password.length <= LENGTH_PASSWORD || !/\d/.test(password)){
             return res.status(400).json({ error: 'Password must be at least 8 characters long and contain at least one number.' });
@@ -21,7 +21,7 @@ export const singup = async (req, res) => {
           return res.status(400).json({ error: 'Invalid email format. Use only @upb.edu.co domain.' });
         }
 
-        const newUser = new User({ firstName, lastName, email, carrer, semester, phoneNumber, gender, password });
+        const newUser = new User({ firstName, lastName, email, carrer, phoneNumber, gender, password });
 
         // checking for roles
         if (roles) {
@@ -32,7 +32,7 @@ export const singup = async (req, res) => {
             newUser.roles = [role._id];
         }
 
-        newUser.photoUrl = '';
+        newUser.profileImage = '';
         const savedUser = await newUser.save();
         const token = generateToken(savedUser);
         res.status(201).json({ savedUser, token });
