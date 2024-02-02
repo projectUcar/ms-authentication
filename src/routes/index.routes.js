@@ -5,7 +5,7 @@ const router = Router()
 
 router.get("/", (req, res) => {
   res.json({
-    message: "Welcome to my Products API",
+    message: "Welcome to microservice Autentication UCAR",
     name: pkg.name,
     version: pkg.version,
     description: pkg.description,

@@ -1,5 +1,4 @@
 import User from '../models/User.js';
-import Roles from '../models/Roles.js';
 
 export const getUserProfile = async (req, res) => {
   try {
