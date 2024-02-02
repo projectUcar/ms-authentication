@@ -4,7 +4,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.checkExistingUser = exports.checkExistingRole = void 0;
+exports.checkExistingUser = void 0;
 var _User = _interopRequireDefault(require("../models/User.js"));
 var _Roles = require("../models/Roles.js");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -65,17 +65,3 @@ var checkExistingUser = exports.checkExistingUser = /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }();
-var checkExistingRole = exports.checkExistingRole = function checkExistingRole(req, res, next) {
-  req.body.roles.find();
-  if (!req.body.roles) return res.status(400).json({
-    message: "No roles"
-  });
-  for (var i = 0; i < req.body.roles.length; i++) {
-    if (!_Roles.ROLES.includes(req.body.roles[i])) {
-      return res.status(400).json({
-        message: "Role ".concat(req.body.roles[i], " does not exist")
-      });
-    }
-  }
-  next();
-};

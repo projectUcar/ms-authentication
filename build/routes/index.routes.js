@@ -10,7 +10,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var router = (0, _express.Router)();
 router.get("/", function (req, res) {
   res.json({
-    message: "Welcome to my Products API",
+    message: "Welcome to microservice Autentication UCAR",
     name: _package["default"].name,
     version: _package["default"].version,
     description: _package["default"].description,
