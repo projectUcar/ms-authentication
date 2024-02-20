@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // true para uso seguro (TLS), false para otro caso
   auth: {
     user: EMAIL_UCAR,
-    pass: PASSWORD_EMAIL, //
+    pass: PASSWORD_EMAIL,
   },
 });
 
@@ -32,28 +32,27 @@ export const forgotPassword = async (req, res) => {
     // Almacenar el código en una colección separada
     const resetEntry = new PasswordReset({
       userId: user._id,
+      userEmail: user.email,
       resetCode,
     });
 
     await resetEntry.save();
 
-    const resetUrl = `${FRONTEND_BASE_URL}:${PORT}/api/auth/reset-password/${resetCode}`;
+    const resetUrl = `${FRONTEND_BASE_URL}/api/auth/reset-password/${resetCode}`;
 
-    // TODO Enviar correo con el enlace de restablecimiento
     const mailOptions = {
-      from: 'carpooling.fisi@upb.edu.co',
+      from: EMAIL_UCAR,
       to: user.email,
-      subject: 'Restablecimiento de Contraseña',
+      subject: 'Restablecimiento de Contraseña UCAR',
       html: `
           <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
           <a href="${resetUrl}">${resetUrl}</a>
+          <p>Recuerda que tienes 20 minutos antes de que caduque tu código\n</p>
         `,
     };
     await transporter.sendMail(mailOptions);
 
-    console.log(resetUrl);
-
-    res.status(200).json({ link: resetUrl, message: 'Reset link sent to the provided email.' });
+    res.status(200).json({ link: resetUrl, message: 'Se ha enviado un enlace con un código a tu correo electrónico.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error.' });
@@ -66,8 +65,7 @@ export const resetPassword = async (req, res) => {
     const { newPassword } = req.body;
     const { confirmNewPassword } = req.body;
 
-    if (newPassword.length <= LENGTH_PASSWORD || !/\d/.test(newPassword
-    )) {
+    if (newPassword.length <= LENGTH_PASSWORD || !/\d/.test(newPassword)) {
       return res.status(400).json({ error: 'Password must be at least 8 characters long and contain at least one number.' });
     }
 

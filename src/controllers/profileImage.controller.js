@@ -1,4 +1,5 @@
 import User from '../models/User';
+import getProfileImageById from '../libs/profileImage';
 import fs from 'fs';
 import path from 'path';
 
@@ -25,20 +26,13 @@ export const uploadProfileImage = async (req, res) => {
 export const getProfileImage = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId);
+    const imagePath = await getProfileImageById(userId);
 
-    if (!user || !user.profileImage) {
+    if (!imagePath) {
       return res.status(404).json({ message: 'Usuario o imagen de perfil no encontrado' });
     }
 
-    const imageFileName = user.profileImage;
-    const imagePath = path.join(__dirname, '..','..','uploads', 'profileImage', imageFileName);
-
-    if (fs.existsSync(imagePath)) {
-      res.sendFile(imagePath);
-    } else {
-      res.status(404).json({ message: 'Imagen de perfil no encontrada en el servidor' });
-    }
+    res.sendFile(imagePath);  
   } catch (error) {
     console.error('Error al obtener la imagen de perfil:', error);
     res.status(500).json({ error: 'Error al obtener la imagen de perfil' });

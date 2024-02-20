@@ -5,6 +5,7 @@ export const MONGODB_URI = process.env.MONGODB_URI;
 export const PORT = process.env.PORT || 4000;
 export const SECRET_KEY = process.env.SECRET;
 export const LENGTH_PASSWORD = 8;
+export const LOCAL_HOST_BASE_URL = process.env.LOCAL_HOST_BASE_URL
 export const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL
 export const PASSWORD_EMAIL = process.env.PASSWORD_EMAIL
 export const EMAIL_UCAR = process.env.EMAIL_UCAR
