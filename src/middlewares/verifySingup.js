@@ -1,5 +1,4 @@
 import User from "../models/User.js";
-import { ROLES } from "../models/Roles.js";
 
 export const checkExistingUser = async (req, res, next) => {
   try {

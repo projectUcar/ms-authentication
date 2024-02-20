@@ -1,39 +1,33 @@
 import User from '../models/User.js';
+import getUserProfileById from '../libs/getUserProfile.js';
 
 export const getUserProfile = async (req, res) => {
   try {
-    const userProfile = await User.aggregate([
-      { $match: { email: req.user.email } },
-      {
-        $lookup: {
-          from: 'roles',
-          localField: 'roles',
-          foreignField: '_id',
-          as: 'rolesData',
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          firstName: 1,
-          lastName: 1,
-          email: 1,
-          carrer: 1,
-          phoneNumber: 1,
-          gender: 1,
-          profileImage: 1,
-          roles: {
-            $map: {
-              input: '$rolesData',
-              as: 'role',
-              in: '$$role.name',
-            },
-          },
-        },
-      },
-    ]);
+    const user = await getUserProfileById(req.user.email);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.json(user);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+export const getUserInfoById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await getUserProfileById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.json(user);
     
-    res.json(userProfile[0]);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error interno del servidor' });
