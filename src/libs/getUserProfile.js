@@ -1,4 +1,5 @@
 import User from '../models/User';
+import Rating from '../models/Rating';
 
 const getUserProfileById = async (userId) => {
     try {
@@ -36,7 +37,30 @@ const getUserProfileById = async (userId) => {
                 },
             },
         ]);
-        return userProfile[0];
+
+        
+
+        const ratings = await Rating.find({ ratedUserId: user._id });
+        const allRatings = [];
+
+        for (const rating of ratings) {
+            const ratingByUser = await User.findById(rating.raterUserId);
+            const ratingBy = ratingByUser ? `${ratingByUser.firstName} ${ratingByUser.lastName}` : null;
+
+            allRatings.push({
+                comment: rating.comment,
+                stars: rating.stars,
+                ratingBy,
+            });
+        }
+
+        // Fusionar la información del usuario con todos los comentarios y estrellas
+        const mergedUserProfile = Object.assign({}, userProfile[0], {
+            ratings: allRatings,
+        });
+
+        return mergedUserProfile;
+
     } catch (error) {
         console.error('Error interno del servidor:', error);
         return null;

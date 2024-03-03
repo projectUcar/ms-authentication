@@ -1,4 +1,3 @@
-import User from '../models/User.js';
 import getUserProfileById from '../libs/getUserProfile.js';
 
 export const getUserProfile = async (req, res) => {

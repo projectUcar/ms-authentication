@@ -24,10 +24,9 @@ var transporter = _nodemailer["default"].createTransport({
   // true para uso seguro (TLS), false para otro caso
   auth: {
     user: _config.EMAIL_UCAR,
-    pass: _config.PASSWORD_EMAIL //
+    pass: _config.PASSWORD_EMAIL
   }
 });
-
 var forgotPassword = exports.forgotPassword = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
     var email, user, resetCode, resetEntry, resetUrl, mailOptions;
@@ -54,40 +53,40 @@ var forgotPassword = exports.forgotPassword = /*#__PURE__*/function () {
           resetCode = _crypto["default"].randomBytes(4).toString('hex'); // Almacenar el código en una colección separada
           resetEntry = new _PasswordReset["default"]({
             userId: user._id,
+            userEmail: user.email,
             resetCode: resetCode
           });
           _context.next = 11;
           return resetEntry.save();
         case 11:
-          resetUrl = "".concat(_config.FRONTEND_BASE_URL, ":").concat(_config.PORT, "/api/auth/reset-password/").concat(resetCode); // TODO Enviar correo con el enlace de restablecimiento
+          resetUrl = "".concat(_config.FRONTEND_BASE_URL, "/api/auth/reset-password/").concat(resetCode);
           mailOptions = {
-            from: 'carpooling.fisi@upb.edu.co',
+            from: _config.EMAIL_UCAR,
             to: user.email,
-            subject: 'Restablecimiento de Contraseña',
-            html: "\n          <p>Para restablecer tu contrase\xF1a, haz clic en el siguiente enlace:</p>\n          <a href=\"".concat(resetUrl, "\">").concat(resetUrl, "</a>\n        ")
+            subject: 'Restablecimiento de Contraseña UCAR',
+            html: "\n          <p>Para restablecer tu contrase\xF1a, haz clic en el siguiente enlace:</p>\n          <a href=\"".concat(resetUrl, "\">").concat(resetUrl, "</a>\n          <p>Recuerda que tienes 20 minutos antes de que caduque tu c\xF3digo\n</p>\n        ")
           };
           _context.next = 15;
           return transporter.sendMail(mailOptions);
         case 15:
-          console.log(resetUrl);
           res.status(200).json({
             link: resetUrl,
-            message: 'Reset link sent to the provided email.'
+            message: 'Se ha enviado un enlace con un código a tu correo electrónico.'
           });
-          _context.next = 23;
+          _context.next = 22;
           break;
-        case 19:
-          _context.prev = 19;
+        case 18:
+          _context.prev = 18;
           _context.t0 = _context["catch"](0);
           console.error(_context.t0);
           res.status(500).json({
             error: 'Internal server error.'
           });
-        case 23:
+        case 22:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 19]]);
+    }, _callee, null, [[0, 18]]);
   }));
   return function forgotPassword(_x, _x2) {
     return _ref.apply(this, arguments);

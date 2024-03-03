@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.uploadProfileImage = exports.getProfileImage = void 0;
 var _User = _interopRequireDefault(require("../models/User"));
+var _profileImage = _interopRequireDefault(require("../libs/profileImage"));
 var _fs = _interopRequireDefault(require("fs"));
 var _path = _interopRequireDefault(require("path"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -56,17 +57,17 @@ var uploadProfileImage = exports.uploadProfileImage = /*#__PURE__*/function () {
 }();
 var getProfileImage = exports.getProfileImage = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-    var userId, user, imageFileName, imagePath;
+    var userId, imagePath;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
           userId = req.user.id;
           _context2.next = 4;
-          return _User["default"].findById(userId);
+          return (0, _profileImage["default"])(userId);
         case 4:
-          user = _context2.sent;
-          if (!(!user || !user.profileImage)) {
+          imagePath = _context2.sent;
+          if (imagePath) {
             _context2.next = 7;
             break;
           }
@@ -74,29 +75,21 @@ var getProfileImage = exports.getProfileImage = /*#__PURE__*/function () {
             message: 'Usuario o imagen de perfil no encontrado'
           }));
         case 7:
-          imageFileName = user.profileImage;
-          imagePath = _path["default"].join(__dirname, '..', '..', 'uploads', 'profileImage', imageFileName);
-          if (_fs["default"].existsSync(imagePath)) {
-            res.sendFile(imagePath);
-          } else {
-            res.status(404).json({
-              message: 'Imagen de perfil no encontrada en el servidor'
-            });
-          }
-          _context2.next = 16;
+          res.sendFile(imagePath);
+          _context2.next = 14;
           break;
-        case 12:
-          _context2.prev = 12;
+        case 10:
+          _context2.prev = 10;
           _context2.t0 = _context2["catch"](0);
           console.error('Error al obtener la imagen de perfil:', _context2.t0);
           res.status(500).json({
             error: 'Error al obtener la imagen de perfil'
           });
-        case 16:
+        case 14:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 12]]);
+    }, _callee2, null, [[0, 10]]);
   }));
   return function getProfileImage(_x3, _x4) {
     return _ref2.apply(this, arguments);
