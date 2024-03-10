@@ -6,9 +6,18 @@ Object.defineProperty(exports, "__esModule", {
 exports.validateToken = void 0;
 var validateToken = exports.validateToken = function validateToken(req, res) {
   try {
+    var user = {
+      email: req.user.email,
+      id: req.user._id,
+      firstName: req.user.firstName,
+      lastname: req.user.lastName,
+      roles: req.user.roles,
+      carrer: req.user.carrer,
+      profileImage: req.user.profileImage
+    };
     res.status(200).json({
       authenticated: true,
-      userId: req.user.email
+      user: user
     });
   } catch (error) {
     console.error(error);
