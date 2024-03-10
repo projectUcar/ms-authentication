@@ -111,7 +111,7 @@ var singup = exports.singup = /*#__PURE__*/function () {
 }();
 var singin = exports.singin = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-    var userFound, matchPassword, token;
+    var userFound, matchPassword, token, name;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
@@ -143,20 +143,22 @@ var singin = exports.singin = /*#__PURE__*/function () {
           }));
         case 11:
           token = (0, _jwt["default"])(userFound);
+          name = userFound.firstName;
           res.json({
+            name: name,
             token: token
           });
-          _context2.next = 18;
+          _context2.next = 19;
           break;
-        case 15:
-          _context2.prev = 15;
+        case 16:
+          _context2.prev = 16;
           _context2.t0 = _context2["catch"](0);
           console.log(_context2.t0);
-        case 18:
+        case 19:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 15]]);
+    }, _callee2, null, [[0, 16]]);
   }));
   return function singin(_x3, _x4) {
     return _ref2.apply(this, arguments);

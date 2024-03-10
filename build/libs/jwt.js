@@ -11,6 +11,7 @@ var generateToken = function generateToken(user) {
     name: user.firstName,
     lastname: user.lastName,
     email: user.email,
+    id: user._id,
     role: user.roles
   };
   var token = jwt.sign(payload, _config.SECRET_KEY, {
