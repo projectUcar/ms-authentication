@@ -16,6 +16,10 @@ var passwordResetSchema = new _mongoose["default"].Schema({
     ref: 'User',
     required: true
   },
+  userEmail: {
+    type: String,
+    required: true
+  },
   resetCode: {
     type: String,
     required: true

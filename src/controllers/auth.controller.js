@@ -43,7 +43,6 @@ export const singup = async (req, res) => {
 
 export const singin = async (req, res) => {
     try {
-        // Request body email can be an email or username
         const userFound = await User.findOne({ email: req.body.email }).populate(
             "roles"
         );
@@ -59,7 +58,8 @@ export const singin = async (req, res) => {
             return res.status(400).json({message: "Email or Password Not Found"});
 
         const token = generateToken(userFound);
-        res.json({ token });
+        const name = userFound.firstName;
+        res.json({ name, token });
     } catch (error) {
         console.log(error);
     }

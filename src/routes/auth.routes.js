@@ -1,6 +1,5 @@
 import {Router} from 'express'
 import {
-    checkExistingRole,
     checkExistingUser,
   } from "../middlewares/verifySingup.js";
   import { authenticateUser } from '../middlewares/authJwt';
