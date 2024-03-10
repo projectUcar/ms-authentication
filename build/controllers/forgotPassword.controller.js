@@ -46,7 +46,7 @@ var forgotPassword = exports.forgotPassword = /*#__PURE__*/function () {
             break;
           }
           return _context.abrupt("return", res.status(404).json({
-            error: 'User not found with the provided email.'
+            error: 'Usuario no encontrado con el email proporcionado'
           }));
         case 7:
           // Generar un código único para restablecer la contraseña
@@ -107,7 +107,7 @@ var resetPassword = exports.resetPassword = /*#__PURE__*/function () {
             break;
           }
           return _context2.abrupt("return", res.status(400).json({
-            error: 'Password must be at least 8 characters long and contain at least one number.'
+            error: 'La contraseña debe tener mínimo 8 caracteres, incluyendo números y signos'
           }));
         case 6:
           if (!(newPassword !== confirmNewPassword)) {
@@ -115,7 +115,7 @@ var resetPassword = exports.resetPassword = /*#__PURE__*/function () {
             break;
           }
           return _context2.abrupt("return", res.status(400).json({
-            error: "Passwords don't match"
+            error: "Las contraseñas no coinciden"
           }));
         case 8:
           _context2.next = 10;
@@ -129,7 +129,7 @@ var resetPassword = exports.resetPassword = /*#__PURE__*/function () {
             break;
           }
           return _context2.abrupt("return", res.status(404).json({
-            error: 'Invalid or expired reset code.'
+            error: 'Código inválido o expirado'
           }));
         case 13:
           // Verificar la duración del token (20 minutos)
@@ -143,7 +143,7 @@ var resetPassword = exports.resetPassword = /*#__PURE__*/function () {
           return resetEntry.remove();
         case 18:
           return _context2.abrupt("return", res.status(400).json({
-            error: 'Reset code has expired.'
+            error: 'El código ha expirado'
           }));
         case 19:
           _context2.next = 21;
@@ -155,7 +155,7 @@ var resetPassword = exports.resetPassword = /*#__PURE__*/function () {
             break;
           }
           return _context2.abrupt("return", res.status(404).json({
-            error: 'User not found.'
+            error: 'Usuario no encontrado'
           }));
         case 24:
           // Actualizar la contraseña y limpiar el código en PasswordReset
@@ -167,7 +167,7 @@ var resetPassword = exports.resetPassword = /*#__PURE__*/function () {
           return resetEntry.remove();
         case 29:
           res.status(200).json({
-            message: 'Password reset successful.'
+            message: 'La contraseña ha sido cambiada correctamente'
           });
           _context2.next = 36;
           break;

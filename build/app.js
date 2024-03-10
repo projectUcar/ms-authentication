@@ -13,6 +13,7 @@ var _indexRoutes = _interopRequireDefault(require("./routes/index.routes.js"));
 var _userRoutes = _interopRequireDefault(require("./routes/user.routes.js"));
 var _forgotPasswordRoutes = _interopRequireDefault(require("./routes/forgotPassword.routes.js"));
 var _profileImageRoutes = _interopRequireDefault(require("./routes/profileImage.routes.js"));
+var _ratingRoutes = _interopRequireDefault(require("./routes/rating.routes.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 var app = (0, _express["default"])();
 app.set('pkg', _package["default"]);
@@ -28,4 +29,5 @@ app.use("/api/user", _userRoutes["default"]);
 app.use('/api/auth', _auth["default"]);
 app.use('/api/auth', _forgotPasswordRoutes["default"]);
 app.use('/api/user', _profileImageRoutes["default"]);
+app.use('/api/rating', _ratingRoutes["default"]);
 var _default = exports["default"] = app;
