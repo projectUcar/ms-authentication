@@ -1,35 +1,22 @@
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
 import User from "../models/User.js"
 import PasswordReset from '../models/PasswordReset.js';
-import { LENGTH_PASSWORD, EMAIL_UCAR, PASSWORD_EMAIL, FRONTEND_BASE_URL, PORT } from "../config.js"
+import { sendMail } from '../libs/emailService.js';
+import { LENGTH_PASSWORD, FRONTEND_BASE_URL, EMAIL_UCAR } from "../config.js";
 
-// TODO Configuración de nodemailer 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.office365.com', // Servidor SMTP para Microsoft 365
-  port: 587, // Puerto para TLS
-  secure: false, // true para uso seguro (TLS), false para otro caso
-  auth: {
-    user: EMAIL_UCAR,
-    pass: PASSWORD_EMAIL,
-  },
-});
 
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    // Verificar si el usuario con ese correo existe
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado con el email proporcionado' });
     }
 
-    // Generar un código único para restablecer la contraseña
     const resetCode = crypto.randomBytes(4).toString('hex');
 
-    // Almacenar el código en una colección separada
     const resetEntry = new PasswordReset({
       userId: user._id,
       userEmail: user.email,
@@ -43,14 +30,15 @@ export const forgotPassword = async (req, res) => {
     const mailOptions = {
       from: EMAIL_UCAR,
       to: user.email,
-      subject: 'Restablecimiento de Contraseña UCAR',
-      html: `
-          <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
-          <a href="${resetUrl}">${resetUrl}</a>
-          <p>Recuerda que tienes 20 minutos antes de que caduque tu código\n</p>
-        `,
+      subject: 'UCAR - Restablecimiento de Contraseña',
+      template: 'emailResetPassword', // Utilizar la plantilla emailResetPassword
+      context: {
+        username: user.firstName,
+        resetUrl,
+      },
     };
-    await transporter.sendMail(mailOptions);
+    
+    await sendMail(mailOptions);
 
     res.status(200).json({ link: resetUrl, message: 'Se ha enviado un enlace con un código a tu correo electrónico.' });
   } catch (error) {
