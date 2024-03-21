@@ -33,7 +33,7 @@ export const forgotPassword = async (req, res) => {
       subject: 'UCAR - Restablecimiento de Contraseña',
       template: 'emailResetPassword', // Utilizar la plantilla emailResetPassword
       context: {
-        username: user.firstName,
+        username: user.firstName.split(' ')[0],
         resetUrl,
       },
     };

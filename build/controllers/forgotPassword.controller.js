@@ -53,7 +53,7 @@ var forgotPassword = exports.forgotPassword = /*#__PURE__*/function () {
             template: 'emailResetPassword',
             // Utilizar la plantilla emailResetPassword
             context: {
-              username: user.firstName,
+              username: user.firstName.split(' ')[0],
               resetUrl: resetUrl
             }
           };
