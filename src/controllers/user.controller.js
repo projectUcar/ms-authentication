@@ -2,7 +2,7 @@ import getUserProfileById from '../libs/getUserProfile.js';
 
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await getUserProfileById(req.user.email);
+    const user = await getUserProfileById(req.user._id);
 
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -19,6 +19,7 @@ export const getUserProfile = async (req, res) => {
 export const getUserInfoById = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const user = await getUserProfileById(id);
 
     if (!user) {

@@ -3,13 +3,13 @@ import Rating from '../models/Rating';
 
 const getUserProfileById = async (userId) => {
     try {
-        const user = await User.findOne({ email: userId });
-        if (!user) {
+        const userFound = await User.findById(userId);
+        if (!userFound) {
             return null;
         }
 
         const userProfile = await User.aggregate([
-            { $match: { email: userId } },
+            { $match: { email: userFound.email } },
             {
                 $lookup: {
                     from: 'roles',
@@ -20,7 +20,7 @@ const getUserProfileById = async (userId) => {
             },
             {
                 $project: {
-                    _id: 0,
+                    _id: 1,
                     firstName: 1,
                     lastName: 1,
                     email: 1,
@@ -40,7 +40,7 @@ const getUserProfileById = async (userId) => {
 
         
 
-        const ratings = await Rating.find({ ratedUserId: user._id });
+        const ratings = await Rating.find({ ratedUserId: userFound._id });
         const allRatings = [];
 
         for (const rating of ratings) {
@@ -55,9 +55,10 @@ const getUserProfileById = async (userId) => {
         }
 
         // Fusionar la información del usuario con todos los comentarios y estrellas
-        const mergedUserProfile = Object.assign({}, userProfile[0], {
-            ratings: allRatings,
-        });
+        const mergedUserProfile = {
+            user: userProfile[0],
+            ratings: allRatings.length > 0 ? allRatings : "¡Ups! Parece que todavía no ha sido evaluado.",
+        };
 
         return mergedUserProfile;
 
