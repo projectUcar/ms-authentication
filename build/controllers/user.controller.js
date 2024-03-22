@@ -18,7 +18,7 @@ var getUserProfile = exports.getUserProfile = /*#__PURE__*/function () {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return (0, _getUserProfile["default"])(req.user.email);
+          return (0, _getUserProfile["default"])(req.user._id);
         case 3:
           user = _context.sent;
           if (user) {
@@ -57,33 +57,34 @@ var getUserInfoById = exports.getUserInfoById = /*#__PURE__*/function () {
         case 0:
           _context2.prev = 0;
           id = req.params.id;
-          _context2.next = 4;
+          console.log(id);
+          _context2.next = 5;
           return (0, _getUserProfile["default"])(id);
-        case 4:
+        case 5:
           user = _context2.sent;
           if (user) {
-            _context2.next = 7;
+            _context2.next = 8;
             break;
           }
           return _context2.abrupt("return", res.status(404).json({
             message: 'Usuario no encontrado'
           }));
-        case 7:
+        case 8:
           res.json(user);
-          _context2.next = 14;
+          _context2.next = 15;
           break;
-        case 10:
-          _context2.prev = 10;
+        case 11:
+          _context2.prev = 11;
           _context2.t0 = _context2["catch"](0);
           console.error(_context2.t0);
           res.status(500).json({
             error: 'Error interno del servidor'
           });
-        case 14:
+        case 15:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 10]]);
+    }, _callee2, null, [[0, 11]]);
   }));
   return function getUserInfoById(_x3, _x4) {
     return _ref2.apply(this, arguments);
