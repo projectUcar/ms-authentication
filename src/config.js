@@ -11,3 +11,5 @@ export const PASSWORD_EMAIL = process.env.PASSWORD_EMAIL
 export const EMAIL_UCAR = process.env.EMAIL_UCAR
 export const CLIENT_ID = process.env.CLIENT_ID
 export const SECRET_ID = process.env.SECRET_ID
+export const JWT_REFRESH = process.env.JWT_REFRESH
+export const ENV_UCAR = process.env.ENV_UCAR

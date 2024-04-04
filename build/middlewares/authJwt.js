@@ -4,7 +4,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.authenticateUser = void 0;
+exports.requireRefreshToken = exports.authenticateUser = void 0;
 var _User = _interopRequireDefault(require("../models/User.js"));
 var _config = require("../config");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -68,5 +68,63 @@ var authenticateUser = exports.authenticateUser = /*#__PURE__*/function () {
   }));
   return function authenticateUser(_x, _x2, _x3) {
     return _ref.apply(this, arguments);
+  };
+}();
+var requireRefreshToken = exports.requireRefreshToken = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
+    var refreshTokenCookie, decodedToken, user;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          refreshTokenCookie = req.cookies.refreshToken;
+          if (refreshTokenCookie) {
+            _context2.next = 4;
+            break;
+          }
+          throw new Error("No existe el token");
+        case 4:
+          decodedToken = jwt.verify(refreshTokenCookie, _config.JWT_REFRESH);
+          if (!(!decodedToken || !decodedToken.email)) {
+            _context2.next = 7;
+            break;
+          }
+          return _context2.abrupt("return", res.status(401).json({
+            message: "token missing or invalid"
+          }));
+        case 7:
+          _context2.next = 9;
+          return _User["default"].findOne({
+            email: decodedToken.email
+          });
+        case 9:
+          user = _context2.sent;
+          if (user) {
+            _context2.next = 12;
+            break;
+          }
+          return _context2.abrupt("return", res.status(404).json({
+            message: "No user found"
+          }));
+        case 12:
+          req.user = user;
+          next();
+          _context2.next = 20;
+          break;
+        case 16:
+          _context2.prev = 16;
+          _context2.t0 = _context2["catch"](0);
+          console.log(_context2.t0);
+          res.status(401).json({
+            error: _context2.t0.message
+          });
+        case 20:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 16]]);
+  }));
+  return function requireRefreshToken(_x4, _x5, _x6) {
+    return _ref2.apply(this, arguments);
   };
 }();
