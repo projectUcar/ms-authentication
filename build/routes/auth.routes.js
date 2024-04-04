@@ -16,4 +16,5 @@ var router = (0, _express.Router)();
 router.post('/singup', [_verifySingup.checkExistingUser], authCtrl.singup);
 router.post('/singin', authCtrl.singin);
 router.get('/validate-token', _authJwt.authenticateUser, verifyTokenCtrl.validateToken);
+router.get('/refresh-token', _authJwt.requireRefreshToken, authCtrl.refreshToken);
 var _default = exports["default"] = router;

@@ -9,6 +9,7 @@ import userRoutes from "./routes/user.routes.js";
 import forgotPasswordRoutes from './routes/forgotPassword.routes.js';
 import profileImage from './routes/profileImage.routes.js';
 import ratingUser from './routes/rating.routes.js';
+import cookieParser from 'cookie-parser';
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.set("json spaces", 4);
 
