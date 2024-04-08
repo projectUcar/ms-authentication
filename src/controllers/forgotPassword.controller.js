@@ -36,6 +36,11 @@ export const forgotPassword = async (req, res) => {
         username: user.firstName.split(' ')[0],
         resetUrl,
       },
+      attachments: [{
+        filename: 'coverLogo.png',
+        path: 'public/images/coverLogo.png',
+        cid: 'coverLogo'
+      }]
     };
     
     await sendMail(mailOptions);

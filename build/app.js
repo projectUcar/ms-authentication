@@ -25,6 +25,7 @@ app.use(_express["default"].urlencoded({
   extended: false
 }));
 app.use((0, _cookieParser["default"])());
+app.use(_express["default"]["static"]("images"));
 app.set("json spaces", 4);
 app.use('/api', _indexRoutes["default"]);
 app.use("/api/user", _userRoutes["default"]);

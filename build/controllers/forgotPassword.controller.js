@@ -55,7 +55,12 @@ var forgotPassword = exports.forgotPassword = /*#__PURE__*/function () {
             context: {
               username: user.firstName.split(' ')[0],
               resetUrl: resetUrl
-            }
+            },
+            attachments: [{
+              filename: 'coverLogo.png',
+              path: 'public/images/coverLogo.png',
+              cid: 'coverLogo'
+            }]
           };
           _context.next = 15;
           return (0, _emailService.sendMail)(mailOptions);

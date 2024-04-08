@@ -1,5 +1,6 @@
 import User from '../models/User';
 import Rating from '../models/Rating';
+import getAverageStars from './raitingService';
 
 const getUserProfileById = async (userId) => {
     try {
@@ -38,7 +39,11 @@ const getUserProfileById = async (userId) => {
             },
         ]);
 
-        
+        // Validar si el usuario tiene el rol de conductor
+        const isConductor = userProfile[0].roles.includes('driver');
+        if (!isConductor) {
+            return userProfile[0]; // Si el usuario no es conductor, devolver null
+        }
 
         const ratings = await Rating.find({ ratedUserId: userFound._id });
         const allRatings = [];
@@ -54,10 +59,16 @@ const getUserProfileById = async (userId) => {
             });
         }
 
+        const { averageRating, ratingTotal } = await getAverageStars(userId);
+
         // Fusionar la información del usuario con todos los comentarios y estrellas
         const mergedUserProfile = {
             user: userProfile[0],
-            ratings: allRatings.length > 0 ? allRatings : "¡Ups! Parece que todavía no ha sido evaluado.",
+            rating: {
+                averageRating,
+                ratingTotal,
+                ratings: allRatings.length > 0 ? allRatings : "¡Ups! Parece que todavía no ha sido evaluado.",
+            } 
         };
 
         return mergedUserProfile;
