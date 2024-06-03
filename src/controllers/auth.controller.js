@@ -15,6 +15,7 @@ export const singup = async (req, res) => {
       password,
       confirmPassword,
       roles,
+      tokenDevice,
     } = req.body;
 
     if (password.length <= LENGTH_PASSWORD || !/\d/.test(password)) {
@@ -46,6 +47,7 @@ export const singup = async (req, res) => {
       phoneNumber,
       gender,
       password,
+      tokenDevice
     });
 
     // checking for roles
@@ -87,7 +89,16 @@ export const singin = async (req, res) => {
     if (!matchPassword)
       return res
         .status(400)
-        .json({ message: "Email o contraseña incorrectos" });
+        .json({ message: "Email o contraseña incorrectos" 
+        });
+
+    const reqTokenDevice = req.body.tokenDevice;
+
+    if (reqTokenDevice) {
+      if (userFound.tokenDevice != reqTokenDevice) {
+        userFound.tokenDevice = reqTokenDevice;
+      }
+    }
 
     const { token, expiresIn } = generateToken(userFound);
     generateRefreshToken(userFound, res);

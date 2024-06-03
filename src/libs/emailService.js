@@ -18,16 +18,29 @@ const transporter = nodemailer.createTransport({
 transporter.use('compile', exphbs({
   viewEngine: {
     extName: '.handlebars',
-    partialsDir: path.resolve('./views/resetPassword'), 
+    partialsDir: path.resolve('./views'), 
     defaultLayout: false,
   },
-  viewPath: path.resolve('./views/resetPassword'),
+  viewPath: path.resolve('./views'),
 }));
 
 
-export const sendMail = async (mailOptions) => {
+export const sendMail = async (to, subject, template, context) => {
+  const mailOptions = {
+    from: EMAIL_UCAR,
+    to,
+    subject,
+    template,
+    context,
+    attachments: [{
+      filename: 'coverLogo.png',
+      path: 'public/images/coverLogo.png',
+      cid: 'coverLogo'
+    }]
+  };
   try {
     await transporter.sendMail(mailOptions);
+    console.log('Correo enviado exitosamente');
   } catch (error) {
     console.error(error);
     throw new Error('Error al enviar el correo electrónico', error);

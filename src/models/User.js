@@ -35,6 +35,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    tokenDevice: {
+        type: String
+    },
     roles: [
         {
             type: mongoose.Schema.Types.ObjectId,

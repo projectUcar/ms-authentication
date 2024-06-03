@@ -11,6 +11,8 @@ import profileImage from './routes/profileImage.routes.js';
 import ratingUser from './routes/rating.routes.js';
 import cookieParser from 'cookie-parser';
 
+import './libs/rabbitmq.js'
+
 const app = express()
 
 app.set('pkg', pkg)
