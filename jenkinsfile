@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs "node"
+    }
+
+    parameters {
+        string(name: 'container_name', defaultValue: 'ms_authentication-test', description: 'Nombre del contenedor de docker.')
+         string(name: 'image_name', defaultValue: 'ms_auth-test', description: 'Nombre de la imagene docker.')
+        string(name: 'tag_image', defaultValue: 'lts', description: 'Tag de la imagen del microservicio.')
+        string(name: 'container_port', defaultValue: '4000', description: 'Puerto que usa el contenedor')
+    }
+
+    stages {
+        stage('install') {
+            steps {
+                git branch: 'main', url: 'https://github.com/projectUcar/ms-authentication.git'
+                sh 'npm install'
+            }
+        }
+    }
+
+    stage('build') {
+      steps {
+        script {
+        try {
+            sh 'docker stop ${container_name}'
+            sh 'docker rm ${container_name}'
+            sh 'docker rmi ${image_name}:${tag_image}'
+        } catch (Exception e) {
+            echo 'Exception occurred: ' + e.toString()
+        }
+        }
+        sh 'npm run build'
+        sh 'docker-compose build'
+    }
+      
+    stage('deploy') {
+      steps {
+        sh 'docker-compose up'
+      }
+    }
+  }
+}
