@@ -14,7 +14,7 @@ pipeline {
           try {
             sh 'docker stop ${container_name}'
             sh 'docker rm ${container_name}'
-            sh 'docker rmi workspace_${image_name}'
+            sh 'docker rmi {image_name}'
           } catch (Exception e) {
             echo 'Exception occurred: ' + e.toString()
           }
@@ -55,7 +55,5 @@ pipeline {
   parameters {
     string(name: 'container_name', defaultValue: 'ms_authentication-test', description: 'Nombre del contenedor de docker.')
     string(name: 'image_name', defaultValue: 'ms_auth-test', description: 'Nombre de la imagen de docker.')
-    string(name: 'tag_image', defaultValue: 'lts', description: 'Tag de la imagen del microservicio.')
-    string(name: 'container_port', defaultValue: '4000', description: 'Puerto que usa el contenedor')
   }
 }
