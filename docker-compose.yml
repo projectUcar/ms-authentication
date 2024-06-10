@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  ms_auth: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test-ms-auth
+    ports:
+      - "4000:4000"
+      - "5672:5672"
+      - "587:587"
+    command: npm start
+ 
