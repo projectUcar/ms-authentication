@@ -46,7 +46,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
                     sh '''
                         export SECRET_FILE=./variables.env
-                        docker-compose --env-file $SECRET_FILE up
+                        docker-compose -d --env-file $SECRET_FILE up
                     '''
                 }
             }
