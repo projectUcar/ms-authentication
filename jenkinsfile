@@ -20,15 +20,29 @@ pipeline {
           }
         }
 
-        sh 'npm run build'
-        sh 'docker-compose build'
-      }
-    }
-
-    stage('deploy') {
-      steps {
-        sh 'docker-compose up'
-      }
+        stage('build') {
+        steps {
+            script {
+            try {
+                sh 'sudo docker stop ${container_name}'
+                sh 'sudo docker rm ${container_name}'
+                sh 'sudo docker rmi ${image_name}:${tag_image}'
+            } catch (Exception e) {
+                echo 'Exception occurred: ' + e.toString()
+                }
+            }
+            sh 'npm run build'
+            sh 'sudo docker-compose build'
+            }
+        }
+        
+        stage('deploy') {
+        steps {
+                withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
+                    sh 'docker-compose --env-file $SECRET_FILE up'
+                }
+            }
+        }
     }
 
   }
