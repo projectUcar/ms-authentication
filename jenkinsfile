@@ -32,7 +32,7 @@ pipeline {
                 }
             }
             sh 'npm run build'
-            sh 'sudo docker-compose build'
+            sh 'docker-compose build'
             }
         }
         
