@@ -22,8 +22,6 @@ pipeline {
 
         stage('build') {
             steps {
-                cleanWs()
-                checkout scm
                 script {
                     try {
                         sh 'docker stop ${container_name}'
