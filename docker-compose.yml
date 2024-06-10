@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: test-ms-auth
+    container_name: ms_authentication-test
     env_file:
       - ./variables.env
     ports:
