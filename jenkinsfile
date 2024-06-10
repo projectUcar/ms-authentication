@@ -38,7 +38,9 @@ pipeline {
         
         stage('deploy') {
         steps {
-            sh 'docker-compose up'
+                withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
+                    sh 'docker-compose --env-file $SECRET_FILE up'
+                }
             }
         }
     }
