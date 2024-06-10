@@ -1,67 +1,61 @@
 pipeline {
-    agent any
-
-    tools {
-        nodejs "node"
+  agent any
+  stages {
+    stage('install') {
+      steps {
+        git(branch: 'main', url: 'https://github.com/projectUcar/ms-authentication.git')
+        sh 'npm install'
+      }
     }
 
-    parameters {
-        string(name: 'container_name', defaultValue: 'ms_authentication-test', description: 'Nombre del contenedor de docker.')
-        string(name: 'image_name', defaultValue: 'ms_auth-test', description: 'Nombre de la imagen de docker.')
-        string(name: 'tag_image', defaultValue: 'lts', description: 'Tag de la imagen del microservicio.')
-        string(name: 'container_port', defaultValue: '4000', description: 'Puerto que usa el contenedor')
+    stage('build') {
+      steps {
+        script {
+          try {
+            sh 'docker stop ${container_name}'
+            sh 'docker rm ${container_name}'
+            sh 'docker rmi workspace_${image_name}'
+          } catch (Exception e) {
+            echo 'Exception occurred: ' + e.toString()
+          }
+        }
+
+        sh 'npm run build'
+        withCredentials(bindings: [file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
+          sh 'cp $SECRET_FILE ./variables.env'
+        }
+
+        sh 'docker-compose --env-file ./variables.env build'
+      }
     }
 
-    stages {
-        stage('install') {
-            steps {
-                git branch: 'main', url: 'https://github.com/projectUcar/ms-authentication.git'
-                sh 'npm install'
-            }
-        }
-
-        stage('build') {
-            steps {
-                script {
-                    try {
-                        sh 'docker stop ${container_name}'
-                        sh 'docker rm ${container_name}'
-                        sh 'docker rmi ${image_name}:${tag_image}'
-                    } catch (Exception e) {
-                        echo 'Exception occurred: ' + e.toString()
-                    }
-                }
-                sh 'npm run build'
-                // Descargar archivo de entorno
-                withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
-                    sh 'cp $SECRET_FILE ./variables.env'
-                }
-                
-                sh 'docker-compose --env-file ./variables.env build'
-            }
-        }
-
-        stage('deploy') {
-            steps {
-                withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
-                    sh '''
+    stage('deploy') {
+      steps {
+        withCredentials(bindings: [file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
+          sh '''
                         export SECRET_FILE=./variables.env
                         docker-compose --env-file $SECRET_FILE up -d
                     '''
-                }
-            }
         }
+
+      }
     }
 
-    post {
-        // Clean after build
-        always {
-            cleanWs(cleanWhenNotBuilt: false,
-                    deleteDirs: true,
-                    disableDeferredWipeout: true,
-                    notFailBuild: true,
-                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-                               [pattern: '.propsfile', type: 'EXCLUDE']])
-        }
+  }
+  tools {
+    nodejs 'node'
+  }
+  post {
+    always {
+      cleanWs(cleanWhenNotBuilt: false, deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true, patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                                     [pattern: '.propsfile', type: 'EXCLUDE']])
     }
+
+  }
+  parameters {
+    string(name: 'container_name', defaultValue: 'ms_authentication-test', description: 'Nombre del contenedor de docker.')
+    string(name: 'image_name', defaultValue: 'ms_auth-test', description: 'Nombre de la imagen de docker.')
+    string(name: 'tag_image', defaultValue: 'lts', description: 'Tag de la imagen del microservicio.')
+    string(name: 'container_port', defaultValue: '4000', description: 'Puerto que usa el contenedor')
+  }
 }
