@@ -22,6 +22,8 @@ pipeline {
 
         stage('build') {
         steps {
+            cleanWs()
+            checkout scm
             script {
             try {
                 sh 'sudo docker stop ${container_name}'
@@ -42,6 +44,18 @@ pipeline {
                     sh 'docker-compose --env-file $SECRET_FILE up'
                 }
             }
+        }
+    }
+
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
         }
     }
     
