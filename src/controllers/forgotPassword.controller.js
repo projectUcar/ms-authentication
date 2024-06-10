@@ -27,9 +27,11 @@ export const forgotPassword = async (req, res) => {
 
     const resetUrl = `${FRONTEND_BASE_URL}/api/auth/reset-password/${resetCode}`;
 
+    console.log(user.email);
+
       const to = user.email;
-      const subject = 'UCAR - Restablecimiento de Contraseña';
-      const template = 'resetPassword/emailResetPassword'; // Nombre de la plantilla de restablecimiento de contraseña
+      const subject = 'UCAR - Restablecimiento de Contraseña2';
+      const template = 'resetPassword/emailResetPassword';
       const context = {
         username: user.firstName.split(' ')[0],
         resetUrl,

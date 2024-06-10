@@ -4,6 +4,7 @@ import { EMAIL_UCAR, QUEUE } from '../config';
 import { sendMail } from './emailService';
 
 amqp.connect(rabbitSettings, (error0, connection) => {
+  console.log("Consumiendo servicio RabbitMQ...");
     if (error0) {
       throw error0;
     }
@@ -16,14 +17,14 @@ amqp.connect(rabbitSettings, (error0, connection) => {
       channel.assertQueue(QUEUE, { durable: false });
   
       channel.consume(QUEUE, async (msg) => {
-        console.log("Consumiendo servicio RabbitMQ...");
         if (msg !== null) {
           const { userId, firstName, lastName, gender, phoneNumber, email, carrer, documentType, documentNumber, brand, model, line, plate } = JSON.parse(msg.content.toString());
 
           console.log(userId, firstName, lastName, gender, phoneNumber, email, carrer, documentType, documentNumber, brand, model, line, plate,);
   
           try {
-            const to = 'andrey.hernandez.2018@upb.edu.co';
+            const changeRolUrl = "http://localhost:4000/api/change-role/driver-role/" + userId;
+            const to = 'cristian.plata.2022@upb.edu.co';
             const subject = 'UCAR - Nueva solicitud de modo conductor';
             const template = 'changeRol/changeRolDriver';
             const context = { 
@@ -40,29 +41,8 @@ amqp.connect(rabbitSettings, (error0, connection) => {
                 model,
                 line,
                 plate,
+                changeRolUrl
             }
-
-            // const mailOptions = {
-            //   from: EMAIL_UCAR,
-            //   to: adminEmails,
-            //   subject: 'UCAR - Nueva solicitud de modo conductor',
-            //   template: 'changeRol/changeRolDriver',
-            //   context: {
-            //     userId,
-            //     firstName,
-            //     lastName,
-            //     gender,
-            //     phoneNumber,
-            //     email,
-            //     carrer,
-            //     documentType,
-            //     documentNumber,
-            //     brand,
-            //     model,
-            //     line,
-            //     plate,
-            //   }
-            // };
   
             await sendMail(to, subject, template, context);
   
