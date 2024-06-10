@@ -7,7 +7,7 @@ pipeline {
 
     parameters {
         string(name: 'container_name', defaultValue: 'ms_authentication-test', description: 'Nombre del contenedor de docker.')
-         string(name: 'image_name', defaultValue: 'ms_auth-test', description: 'Nombre de la imagene docker.')
+        string(name: 'image_name', defaultValue: 'ms_auth-test', description: 'Nombre de la imagen de docker.')
         string(name: 'tag_image', defaultValue: 'lts', description: 'Tag de la imagen del microservicio.')
         string(name: 'container_port', defaultValue: '4000', description: 'Puerto que usa el contenedor')
     }
@@ -21,28 +21,49 @@ pipeline {
         }
 
         stage('build') {
-        steps {
-            script {
-            try {
-                sh 'sudo docker stop ${container_name}'
-                sh 'sudo docker rm ${container_name}'
-                sh 'sudo docker rmi ${image_name}:${tag_image}'
-            } catch (Exception e) {
-                echo 'Exception occurred: ' + e.toString()
+            steps {
+                cleanWs()
+                checkout scm
+                script {
+                    try {
+                        sh 'docker stop ${container_name}'
+                        sh 'docker rm ${container_name}'
+                        sh 'docker rmi ${image_name}:${tag_image}'
+                    } catch (Exception e) {
+                        echo 'Exception occurred: ' + e.toString()
+                    }
                 }
-            }
-            sh 'npm run build'
-            sh 'docker-compose build'
+                sh 'npm run build'
+                // Descargar archivo de entorno
+                withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
+                    sh 'cp $SECRET_FILE ./variables.env'
+                }
+                
+                sh 'docker-compose --env-file ./variables.env build'
             }
         }
-        
+
         stage('deploy') {
-        steps {
+            steps {
                 withCredentials([file(credentialsId: 'SECRET_FILE_AUTH', variable: 'SECRET_FILE')]) {
-                    sh 'docker-compose --env-file $SECRET_FILE up'
+                    sh '''
+                        export SECRET_FILE=./variables.env
+                        docker-compose --env-file $SECRET_FILE up
+                    '''
                 }
             }
         }
     }
-    
+
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
+    }
 }

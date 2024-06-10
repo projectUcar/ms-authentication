@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: test-ms-auth
     env_file:
-      - ${SECRET_FILE}
+      - ./variables.env
     ports:
       - "4000:4000"
       - "5672:5672"
