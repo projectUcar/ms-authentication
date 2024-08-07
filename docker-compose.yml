@@ -13,4 +13,10 @@ services:
       - "5672:5672"
       - "587:587"
     command: npm start
+    networks:
+      - ucar-network
+
+networks:
+  ucar-network:
+    external: true
  
