@@ -1,7 +1,7 @@
 import Role from '../models/Roles.js'; 
 import User from '../models/User.js'; 
 
-const hasRole = async (userId, roleName) => {
+export const hasRole = async (userId, roleName) => {
   try {
     // Obtener el ID del rol
     const role = await Role.findOne({ name: roleName });
@@ -22,4 +22,7 @@ const hasRole = async (userId, roleName) => {
   }
 };
 
-export default hasRole;
+export const returnRole = async (roleId) => {
+  const role = await Role.findById(roleId);
+  return role ? role.name : null;
+};
