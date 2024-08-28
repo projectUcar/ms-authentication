@@ -1,7 +1,8 @@
 import User from "../models/User.js";
 import Role from "../models/Roles.js";
-import { generateToken, generateRefreshToken } from "../libs/jwt.js";
+import { preparateDataToken, generateToken, generateRefreshToken } from "../libs/jwt.js";
 import { LENGTH_PASSWORD } from "../config.js";
+import { returnRole } from "../libs/verifyRole.js";
 
 export const singup = async (req, res) => {
   try {
@@ -61,8 +62,9 @@ export const singup = async (req, res) => {
 
     newUser.profileImage = "";
     const savedUser = await newUser.save();
-    const { token, expiresIn } = generateToken(savedUser);
-    generateRefreshToken(savedUser, res);
+    const tokenData = await preparateDataToken(savedUser);
+    const { token, expiresIn } = generateToken(tokenData);
+    generateRefreshToken(tokenData, res);
 
     res.status(201).json({ savedUser, token, expiresIn });
   } catch (error) {
@@ -100,18 +102,22 @@ export const singin = async (req, res) => {
       }
     }
 
-    const { token, expiresIn } = generateToken(userFound);
-    generateRefreshToken(userFound, res);
+    const roleNames = await Promise.all(userFound.roles.map(roleId => returnRole(roleId)));
+    const tokenData = await preparateDataToken(userFound);
+    const { token, expiresIn } = generateToken(tokenData);
+
+    generateRefreshToken(tokenData, res);
     const name = userFound.firstName;
-    res.json({ name, token, expiresIn });
+    res.json({ name, roleNames, token, expiresIn });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const refreshToken = (req, res) => {
+export const refreshToken = async (req, res) => {
     try {
-        const { token, expiresIn } = generateToken(req.user);
+        const tokenData = await preparateDataToken(req.user);
+        const { token, expiresIn } = generateToken(tokenData);
         return res.json({ token, expiresIn });
     } catch (error) {
         console.log(error);
