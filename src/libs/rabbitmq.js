@@ -23,7 +23,7 @@ amqp.connect(rabbitSettings, (error0, connection) => {
           console.log(userId, firstName, lastName, gender, phoneNumber, email, carrer, documentType, documentNumber, brand, model, line, plate,);
   
           try {
-            const changeRolUrl = "http://localhost:4000/api/change-role/driver-role/" + userId;
+            const changeRolUrl = "http://ucar.bucaramanga.upb.edu.co:4000/api/change-role/driver-role/" + userId;
             const to = 'andrey.hernandez.2018@upb.edu.co';
             const subject = 'UCAR - Nueva solicitud de modo conductor';
             const template = 'changeRol/changeRolDriver';
